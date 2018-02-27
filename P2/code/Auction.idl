@@ -1,0 +1,22 @@
+module AuctionApp{
+	interface Auction{
+		boolean setUsrName(in string usrName);
+		void setPassword(in string client, in string password);
+		string view_auction_status();
+		boolean checkAccount(in string client, in string password);
+		boolean hasSeller();
+		boolean deposit(in string client, in long amount);
+		// function for seller
+		boolean sell(in string client, in string itemName);
+		void setBasePrice(in long price);
+		//boolean Offer_Item(in string name);//seems useless
+		//string view_high_bidder();//seems useless
+		// function for bidder
+		string bid(in string client, in long price);
+		//string view_bid_status();
+
+	};
+
+
+
+};
