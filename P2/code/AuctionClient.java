@@ -4,9 +4,10 @@ import org.omg.CosNaming.NamingContextPackage.*;
 import org.omg.CORBA.*;
 
 import java.io.*;
+import java.util.concurrent.TimeUnit;
 
 enum status{
-	logOrRegister, checkPassword, setName, setPassword, chooseSeller, selling, bidding, godView, finish;
+	logOrRegister, checkPassword, setName, setPassword, chooseSeller, selling, bidding, godView, waitNewRound, finish;
 }
 
 public class AuctionClient
@@ -86,7 +87,8 @@ public class AuctionClient
 					password = getStringInput();
 					if(auc.checkAccount(username,password)){
 						usr = username;
-						bidStatus = status.chooseSeller;
+						if(auc.hasSeller()) bidStatus = status.bidding;
+						else bidStatus = status.chooseSeller;
 					}
 					else{
 						System.out.println("Login error due to: 1. User already online 2. UserName not exists 3. password Incorrect.");
@@ -119,12 +121,12 @@ public class AuctionClient
 					amount = getNumInput();
 					if(!auc.deposit(usr,amount)) System.out.println("Deposit Fail! Amount should be positive.");
 					else System.out.println("Deposit Successfully!");
-					if(auc.hasSeller()) bidStatus = status.bidding;
-					else bidStatus = status.chooseSeller;
+					bidStatus = status.logOrRegister;
 					break;
 				case chooseSeller:
 					System.out.println(usr+", do you want to be a seller? Y or N.");
 					s = getStringInput();
+					auc.clearStatus();
 					if(s.equalsIgnoreCase("Y")){
 						bidStatus = status.selling;
 					}else if(s.equalsIgnoreCase("N")){
@@ -162,6 +164,11 @@ public class AuctionClient
 					}
 					break;
 				case godView:
+					if(auc.roundFinish()){
+						System.out.println("Bidding finish, winner:"+auc.curHighestBidder()+" ("+auc.curBid()+").");
+						bidStatus = status.waitNewRound;
+						break;
+					}
 					System.out.println("Choose one operation:");
 					System.out.println(
 						"[1]: view status\n"+
@@ -172,13 +179,21 @@ public class AuctionClient
 						case 1:
 							System.out.println(auc.view_auction_status());
 							break;
+						case 2:
+
 					}
 					break;
 				case bidding:
+					if(auc.roundFinish()){
+						System.out.println("Bidding finish, winner:"+auc.curHighestBidder()+" ("+auc.curBid()+").");
+						bidStatus = status.waitNewRound;
+						break;
+					}
 					System.out.println("Choose one operation:");
 					System.out.println(
 						"[1]: view status\n"+
-						"[2]: offer price"
+						"[2]: offer price\n"+
+						"[3]: log off"
 						);
 					choice = getNumInput();
 					switch(choice){
@@ -207,9 +222,24 @@ public class AuctionClient
 							}
 							else System.out.println("Bid Successfully!");
 							break;
+						case 3:
+							System.out.println("Logging off...");
+							auc.logoff(usr);
+							bidStatus = status.logOrRegister;
+							break;
 						default:
 							System.out.println("Choice not exist.");
 					}
+					break;
+				case waitNewRound:
+					if(auc.allReset(usr)){
+						System.out.println("Starting a new round...");
+						bidStatus = status.chooseSeller;
+					}
+					try{
+						TimeUnit.SECONDS.sleep(2); //check every 2 seconds.
+					}catch(InterruptedException ex){}
+					
 					break;
 			}
 			

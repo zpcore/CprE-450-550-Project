@@ -1,5 +1,12 @@
 module AuctionApp{
 	interface Auction{
+
+		string curHighestBidder();
+		long curBid(); 
+		void clearStatus();
+		boolean roundFinish();
+		boolean allReset(in string client);
+
 		boolean setUsrName(in string usrName);
 		void setPassword(in string client, in string password);
 		string view_auction_status();
@@ -13,6 +20,7 @@ module AuctionApp{
 		//string view_high_bidder();//seems useless
 		// function for bidder
 		string bid(in string client, in long price);
+		void logoff(in string client);
 		//string view_bid_status();
 
 	};

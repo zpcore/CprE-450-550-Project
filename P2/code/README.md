@@ -1,6 +1,6 @@
 ## ISU CprE 450/550 Project 2
 # Auction System using Corba
-# This is really a boring time-wasting project. The code applies for Phase III directly. 
+## The code applies for Phase III directly. 
 ---
 ### Steps to run the code:
 
