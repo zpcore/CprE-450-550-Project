@@ -22,7 +22,7 @@ orbd -ORBInitialPort 1050&
 ```
 #### Run Server Code.
 ```bash
-Java --add-modules java.se.ee AuctionServer -ORBInitialPort 1050 -ORBInitialHost localhost&
+java --add-modules java.se.ee AuctionServer -ORBInitialPort 1050 -ORBInitialHost localhost&
 ```
 ### 3) Client Side:
 #### Run Client Code. You can initiate more than one clients.
