@@ -26,7 +26,6 @@ public class transactionDemo{
 		
 		try{
 			AccountResponse sourceAccount = server.accounts().account(source);
-			System.out.println("ssssssssss");
 			Transaction transaction = new Transaction.Builder(sourceAccount)
 		        .addOperation(new PaymentOperation.Builder(destination, new AssetTypeNative(), "22").build())
 		        // A memo allows you to add your own metadata to a transaction. It's
