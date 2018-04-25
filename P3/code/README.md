@@ -1,7 +1,7 @@
 ## ISU CprE 450/550 Project 3
 # Distributed Coin Flipping Game Using Stellar (applies for phase III)
 ---
-### Preparation:
+### Preparation: (replace ":" to ";" on windows machine)
 #### (The code is copied from Stellar offcial website with little revision.)
 #### Create the account:
 ```bash
